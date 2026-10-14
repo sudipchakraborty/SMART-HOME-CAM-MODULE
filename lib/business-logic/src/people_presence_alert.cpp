@@ -56,6 +56,10 @@ bool MotionPresenceDetector::update(const uint8_t *jpeg, size_t length, unsigned
 
 void PeoplePresenceAlert::process(const uint8_t *jpeg, size_t length, unsigned long now_ms)
 {
-    if (detector_.update(jpeg, length, now_ms))
-        Serial.println("people found");
+    const bool was_present = detector_.present();
+    detector_.update(jpeg, length, now_ms);
+    const bool is_present = detector_.present();
+
+    if (is_present != was_present)
+        Serial.println(is_present ? "Human face detected" : "No human face detected");
 }
